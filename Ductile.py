@@ -33,7 +33,8 @@ from Duc_Data import ParamUSDuctile
 #doc=App.ActiveDocument
 DEBUG = True # set to True to show debug messages
 #JDPA A300
-Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type','US_type',]
+#Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type','US_type',]
+Duc_type=['Flange_type','K_type',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -88,9 +89,9 @@ class Ui_Dialog(object):
         self.pushButton.setGeometry(QtCore.QRect(170, 115, 75, 24))
         self.pushButton.setObjectName("pushButton")
         #mass
-        self.pushButton_2 = QtGui.QPushButton('mass',Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(250, 115, 50, 24))
-        self.pushButton_2.setObjectName("pushButton")
+        #self.pushButton_2 = QtGui.QPushButton('mass',Dialog)
+        #self.pushButton_2.setGeometry(QtCore.QRect(250, 115, 50, 24))
+        #self.pushButton_2.setObjectName("pushButton")
 
         #更新
         self.pushButton_update = QtGui.QPushButton('upDate',Dialog)
@@ -135,7 +136,7 @@ class Ui_Dialog(object):
         self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.fc_create)
-        QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("pressed()"), self.on_mass)
+        #QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("pressed()"), self.on_mass)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.setParts)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
 
@@ -173,9 +174,12 @@ class Ui_Dialog(object):
            
            try:
                L=self.spinBoxL.value()
-               myShape.L0=str(L)
-               myShape.L=str(L)
+               try: 
+                   myShape.L0=str(L)
+               except: 
+                   myShape.L=str(L)
            except:
+               
                #myShape.L=str(L)
                myShape=None
            Gui.runCommand('asm3CmdQuickSolve',0)  
@@ -212,11 +216,15 @@ class Ui_Dialog(object):
             #print(dia)
             try:
                 L0=self.spinBoxL.value()
-                myShape.L0=str(L0)
+                try:
+                    myShape.L0=str(L0)
+                except:    
+                    myShape.L=str(L0)
                 myShape.dia=str(dia)
                 
             except:
                 myShape.dia=str(dia)
+                
                 #myShape=None
         App.ActiveDocument.recompute() 
         Gui.runCommand('asm3CmdQuickSolve',0)      
