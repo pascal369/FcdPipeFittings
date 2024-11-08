@@ -932,5 +932,14 @@ class u_ductile:
                 c1=c1.fuse(c11)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        Gui.runCommand('Draft_Move',0)  
+        label='mass[kg]'
+        try:
+            #obj.addProperty("App::PropertyFloat", "body",label)
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+        except:
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+            pass  
         obj.Shape=c1

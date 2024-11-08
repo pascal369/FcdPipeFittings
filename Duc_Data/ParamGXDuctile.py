@@ -1436,7 +1436,15 @@ class gx_ductile:
                 c1=c1.cut(c14)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        #Gui.runCommand('Draft_Move',0)  
+        label='mass[kg]'
+        try:
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+        except:
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+            pass   
         obj.Shape=c1
 
 

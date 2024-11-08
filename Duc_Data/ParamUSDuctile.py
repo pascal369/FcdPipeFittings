@@ -122,5 +122,14 @@ class us_ductile:
             c1=wface.revolve(Base.Vector(0,0.0,0.0),Base.Vector(1.0,0.0,0.0),360)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        Gui.runCommand('Draft_Move',0)      
+        label='mass[kg]'
+        try:
+            #obj.addProperty("App::PropertyFloat", "body",label)
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+        except:
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+            pass  
         obj.Shape=c1

@@ -848,5 +848,4 @@ class uf_ductile:
             c1=c1.fuse(c2)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        Gui.runCommand('Draft_Move',0)  
         obj.Shape=c1

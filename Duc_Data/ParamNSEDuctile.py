@@ -803,6 +803,15 @@ class nse_ductile:
                 wface = Part.Face(w10)
                 c2=wface.revolve(Base.Vector(0,0.0,0.0),Base.Vector(1,0,0),360)
                 c1=c1.fuse(c2)
-            
+        label='mass[kg]'
+        try:
+            #obj.addProperty("App::PropertyFloat", "body",label)
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+        except:
+            obj.mass=g
+            obj.ViewObject.Proxy=0
+            pass      
         obj.Shape=c1
 
