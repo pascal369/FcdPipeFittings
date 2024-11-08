@@ -182,7 +182,6 @@ class Ui_Dialog(object):
                
                #myShape.L=str(L)
                myShape=None
-           Gui.runCommand('asm3CmdQuickSolve',0)  
            App.ActiveDocument.recompute() 
                          
     def on_mass(self):
