@@ -17,7 +17,7 @@ After unzipping  the "FcdPipeFittings-main.zip",Place it in the "Mod" folder in 
 
 [upDate] Update obj
 
-[imprt Data] Importing obj Properties
+[import Data] Importing obj Properties
 
 [mass] Mass Calculation
 
