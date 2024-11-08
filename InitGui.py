@@ -10,7 +10,7 @@ import FreeCADGui
 
 class FcdFittingsShowCommand:
     def GetResources(self):
-        from init import module_path
+        from Init import module_path
         print(module_path)
         return { 
           'Pixmap': os.path.join(module_path, "icons", "FcdFittings.svg"),
