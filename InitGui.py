@@ -2,7 +2,7 @@
 #*    Copyright (C) 2023 
 #*    This library is free software
 #***************************************************************************
-
+import inspect
 import os
 import sys
 import FreeCAD
@@ -10,9 +10,9 @@ import FreeCADGui
 
 class FcdFittingsShowCommand:
     def GetResources(self):
-        from Init import module_path
-        print(module_path)
-        return { 
+        file_path = inspect.getfile(inspect.currentframe())
+        module_path=os.path.dirname(file_path)
+        return  { 
           'Pixmap': os.path.join(module_path, "icons", "FcdFittings.svg"),
           'MenuText': "FcdFittings",
           'ToolTip': "Show/Hide FcdFittings"}
@@ -35,8 +35,8 @@ class FcdFittingsShowCommand:
 
 class FcdFittingsWB(FreeCADGui.Workbench):
     def __init__(self):
-        from Init import module_path
-        print(module_path)
+        file_path = inspect.getfile(inspect.currentframe())
+        module_path=os.path.dirname(file_path)
         self.__class__.Icon = os.path.join(module_path, "icons", "FcdFittings.svg")
         self.__class__.MenuText = "FcdFittings"
         self.__class__.ToolTip = "FcdFittings by Pascal"
