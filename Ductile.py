@@ -38,7 +38,7 @@ Duc_type=['Flange_type','K_type',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(330, 435)
+        Dialog.resize(330, 500)
         Dialog.move(1000, 0)
         #種別
         self.label_type = QtGui.QLabel('Type',Dialog)
@@ -103,11 +103,41 @@ class Ui_Dialog(object):
         
         #胴付き寸法
         self.label_7 = QtGui.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(20, 170, 170, 12))
-        self.label_7.setObjectName("label_7")
+        self.label_7.setGeometry(QtCore.QRect(20, 195, 170, 12))
+        #self.label_7.setObjectName("label_7")
+
+
+        #質量計算
+        self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
+        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 100, 23))
+        self.pushButton_m.setObjectName("pushButton")  
+        #質量集計
+        self.pushButton_m20 = QtGui.QPushButton('massTally_csv',Dialog)
+        self.pushButton_m20.setGeometry(QtCore.QRect(120, 165, 140, 23))
+        #self.pushButton_m2.setObjectName("pushButton")
+
+        self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
+        self.pushButton_m2.setGeometry(QtCore.QRect(120, 190, 140, 23))
+        #self.pushButton_m2.setObjectName("pushButton")
+        #質量入力
+        self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
+        self.pushButton_m3.setGeometry(QtCore.QRect(20, 215, 100, 23))
+        self.pushButton_m3.setObjectName("pushButton")  
+        self.le_mass = QtGui.QLineEdit(Dialog)
+        self.le_mass.setGeometry(QtCore.QRect(120, 215, 50, 20))
+        self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
+        self.le_mass.setText('10.0')
+        #密度
+        self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
+        self.lbl_gr.setGeometry(QtCore.QRect(20, 240, 80, 12))
+        self.le_gr = QtGui.QLineEdit(Dialog)
+        self.le_gr.setGeometry(QtCore.QRect(120, 240, 50, 20))
+        self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
+        self.le_gr.setText('7.85')
+
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
-        self.label_6.setGeometry(QtCore.QRect(15, 210, 300, 200))
+        self.label_6.setGeometry(QtCore.QRect(15, 275, 300, 200))
         self.label_6.setText("")
         base=os.path.dirname(os.path.abspath(__file__))
         joined_path = os.path.join(base, "img","img_00.png")
@@ -136,15 +166,121 @@ class Ui_Dialog(object):
         self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.fc_create)
-        #QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("pressed()"), self.on_mass)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.setParts)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
+
+        QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
+        QtCore.QObject.connect(self.pushButton_m20, QtCore.SIGNAL("pressed()"), self.massTally2)
+        QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally)
+        QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", 'FcdPipeFittings', None))
         
+    def massImput(self):
+         # 選択したオブジェクトを取得する
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label='mass[kg]'
+        g=float(self.le_mass.text())
+        try:
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+        except:
+            obj.mass=g
+
+    def massCulc(self):
+        # 選択したオブジェクトを取得する
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label='mass[kg]'
+        g0=float(self.le_gr.text())
+        try:
+            g=round(obj.Shape.Volume*g0*1000/10**9 ,2)
+        except:
+             pass
+        try:
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+        except:
+            obj.mass=g        
+    
+    def massTally2(self):#csv
+        doc = App.ActiveDocument
+        objects = doc.Objects
+        mass_list = []
+        for obj in objects:
+            if Gui.ActiveDocument.getObject(obj.Name).Visibility:
+                if obj.isDerivedFrom("Part::Feature"):
+                    if hasattr(obj, "mass"):
+                        try:
+                            if obj.Label[:6]=='Single' or obj.Label[:13]=='Flange Length' or obj.Label[:10]=='K_Straight':
+                                mass_list.append([obj.Label, obj.dia,obj.standard,obj.L0,'mm', obj.mass])
+                            else:
+                                mass_list.append([obj.Label, obj.dia,obj.standard,'1','Piece', obj.mass])
+                        except:
+                            pass    
+                else:
+                     pass
+        doc_path = doc.FileName
+        csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_parts_list.csv"
+        csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
+        with open(csv_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['Name','Dia','Standard','Quantity','Unit', "Mass[kg]"])
+            writer.writerows(mass_list) 
+    
+    def massTally(self):
+        doc = App.ActiveDocument
+        # 新しいスプレッドシートを作成
+        spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
+        spreadsheet.Label = "Parts List"
+        
+        # ヘッダー行を記入
+        headers = ["No",  "Name", "Dia", "Standard",'Quantity','Unit','Mass[kg]']
+        for header in enumerate(headers):
+            #spreadsheet.set(f"A{i+1}", str(i + 1))  # 行番号
+            spreadsheet.set(f"A{1}", headers[0])
+            spreadsheet.set(f"B{1}", headers[1])
+            spreadsheet.set(f"C{1}", headers[2])
+            spreadsheet.set(f"D{1}", headers[3])
+            spreadsheet.set(f"E{1}", headers[4])
+            spreadsheet.set(f"F{1}", headers[5])
+            spreadsheet.set(f"G{1}", headers[6])
+        # パーツを列挙して情報を書き込む
+        row = 2
+        i=1
+        for i,obj in enumerate(doc.Objects):
+            if hasattr(obj, "Shape") and obj.Shape.Volume > 0:
+                try:
+                    spreadsheet.set(f"A{row}", str(row-1))  # No
+                    spreadsheet.set(f"B{row}", obj.Label)  
+                    spreadsheet.set(f"C{row}", obj.dia)
+                    try:
+                        spreadsheet.set(f"D{row}", obj.standard) 
+                    except:
+                        pass
+                    try:
+                        spreadsheet.set(f"E{row}", obj.L0)   # quantity
+                        spreadsheet.set(f"F{row}", 'mm')
+                    except:   
+                        spreadsheet.set(f"E{row}", '1')   # quantity
+                        spreadsheet.set(f"F{row}", 'piece') 
+                    try:
+                        spreadsheet.set(f"G{row}", f"{obj.mass:.2f}")  # mass
+                    except:
+                        pass
+                    #material = obj.material if "material" in obj.PropertiesList else ""
+                    row += 1
+                except:
+                    pass    
+        
+        App.ActiveDocument.recompute()
+        Gui.activeDocument().activeView().viewAxometric()
 
     def setParts(self):
         selection = Gui.Selection.getSelection()
@@ -212,7 +348,6 @@ class Ui_Dialog(object):
         for obj in selection:
             myShape=obj
             dia=self.comboBox_2.currentText()
-            #print(dia)
             try:
                 L0=self.spinBoxL.value()
                 try:
@@ -232,7 +367,6 @@ class Ui_Dialog(object):
 
     def on_type(self):
         type=self.combo_type.currentText()
-        #print(type)
         key=self.comboBox.currentText()[:2]
         self.comboBox.clear()
         if type=='Flange_type':
