@@ -32,6 +32,7 @@ from Duc_Data import ParamUFDuctile
 from Duc_Data import ParamUSDuctile
 #doc=App.ActiveDocument
 DEBUG = True # set to True to show debug messages
+lang=['English','Jananeese']
 #JDPA A300
 #Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type','US_type',]
 Duc_type=['Flange_type','K_type',]
@@ -107,45 +108,57 @@ class Ui_Dialog(object):
         #self.label_7.setObjectName("label_7")
 
 
+        
+        #spreadsheet
+        self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
+        self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 23))
+
+        #言語
+        self.comboBox_lan = QtGui.QComboBox(Dialog)
+        self.comboBox_lan.setGeometry(QtCore.QRect(170, 165, 90, 22))
+        
         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
-        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 100, 23))
-        self.pushButton_m.setObjectName("pushButton")  
-        #質量集計
-        self.pushButton_m20 = QtGui.QPushButton('massTally_csv',Dialog)
-        self.pushButton_m20.setGeometry(QtCore.QRect(120, 165, 140, 23))
-        #self.pushButton_m2.setObjectName("pushButton")
+        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 23))
+        #self.pushButton_m.setObjectName("pushButton")  
 
-        self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
-        self.pushButton_m2.setGeometry(QtCore.QRect(120, 190, 140, 23))
-        #self.pushButton_m2.setObjectName("pushButton")
+        #count
+        self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
+        self.pushButton_ct.setGeometry(QtCore.QRect(20, 215, 100, 23))
+        #self.pushButton_ct.setObjectName("pushButton")  
+        self.le_ct = QtGui.QLineEdit(Dialog)
+        self.le_ct.setGeometry(QtCore.QRect(120, 215, 50, 20))
+        self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
+        self.le_ct.setText('1')
+        
         #質量入力
         self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
-        self.pushButton_m3.setGeometry(QtCore.QRect(20, 215, 100, 23))
+        self.pushButton_m3.setGeometry(QtCore.QRect(20, 240, 100, 23))
         self.pushButton_m3.setObjectName("pushButton")  
         self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(120, 215, 50, 20))
+        self.le_mass.setGeometry(QtCore.QRect(120, 240, 50, 20))
         self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_mass.setText('10.0')
         #密度
         self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(20, 240, 80, 12))
+        self.lbl_gr.setGeometry(QtCore.QRect(20, 265, 80, 12))
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(120, 240, 50, 20))
+        self.le_gr.setGeometry(QtCore.QRect(120, 265, 50, 20))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')
 
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
-        self.label_6.setGeometry(QtCore.QRect(15, 275, 300, 200))
+        self.label_6.setGeometry(QtCore.QRect(15, 300, 300, 200))
         self.label_6.setText("")
         base=os.path.dirname(os.path.abspath(__file__))
         joined_path = os.path.join(base, "img","img_00.png")
         self.label_6.setPixmap(QtGui.QPixmap(joined_path))
-        self.label_6.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_6.setAlignment(QtCore.Qt.AlignTop)
         self.label_6.setObjectName("label_6")
 
         self.combo_type.addItems(Duc_type)
+        self.comboBox_lan.addItems(lang)
         self.combo_type.setCurrentIndex(1)
         self.combo_type.currentIndexChanged[int].connect(self.on_type)
         self.combo_type.setCurrentIndex(0)
@@ -163,14 +176,16 @@ class Ui_Dialog(object):
         self.combo_type.currentIndexChanged[int].connect(self.on_lst2)
         self.combo_type.setCurrentIndex(0)
 
+
+
         self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.fc_create)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.setParts)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
+        QtCore.QObject.connect(self.pushButton_ct, QtCore.SIGNAL("pressed()"), self.countCulc)
 
         QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
-        QtCore.QObject.connect(self.pushButton_m20, QtCore.SIGNAL("pressed()"), self.massTally2)
         QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally)
         QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
 
@@ -192,6 +207,18 @@ class Ui_Dialog(object):
         except:
             obj.mass=g
 
+    def countCulc(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label='mass[kg]'
+        count=int(self.le_ct.text())
+        try:
+            obj.addProperty("App::PropertyFloat", "count",label)
+            obj.count=count
+        except:
+            obj.count=count 
+
     def massCulc(self):
         # 選択したオブジェクトを取得する
         c00 = Gui.Selection.getSelection()
@@ -201,47 +228,29 @@ class Ui_Dialog(object):
         g0=float(self.le_gr.text())
         try:
             g=round(obj.Shape.Volume*g0*1000/10**9 ,2)
+            count=int(self.le_ct.text())
+            print(count)
         except:
              pass
         try:
             obj.addProperty("App::PropertyFloat", "mass",label)
             obj.mass=g
         except:
-            obj.mass=g        
+            obj.mass=g  
     
-    def massTally2(self):#csv
+    def massTally(self):#spreadsheet
         doc = App.ActiveDocument
-        objects = doc.Objects
-        mass_list = []
-        for obj in objects:
-            if Gui.ActiveDocument.getObject(obj.Name).Visibility:
-                if obj.isDerivedFrom("Part::Feature"):
-                    if hasattr(obj, "mass"):
-                        try:
-                            if obj.Label[:6]=='Single' or obj.Label[:13]=='Flange Length' or obj.Label[:10]=='K_Straight':
-                                mass_list.append([obj.Label, obj.dia,obj.standard,obj.L0,'mm', obj.mass])
-                            else:
-                                mass_list.append([obj.Label, obj.dia,obj.standard,'1','Piece', obj.mass])
-                        except:
-                            pass    
-                else:
-                     pass
-        doc_path = doc.FileName
-        csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_parts_list.csv"
-        csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
-        with open(csv_path, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(['Name','Dia','Standard','Quantity','Unit', "Mass[kg]"])
-            writer.writerows(mass_list) 
-    
-    def massTally(self):
-        doc = App.ActiveDocument
-        # 新しいスプレッドシートを作成
-        spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
+        try:
+            # 新しいスプレッドシートを作成
+            spreadsheet = doc.getObject("PartList")
+            #spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
+        except:
+            #spreadsheet = doc.getObject("PartList")
+            spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
         spreadsheet.Label = "Parts List"
-        
         # ヘッダー行を記入
-        headers = ["No",  "Name", "Dia", "Standard",'Quantity','Unit','Mass[kg]']
+        headers = ["No",  "Name", "Dia", "Standard",'Count','Unit[kg]','Mass[kg]']
+        
         for header in enumerate(headers):
             #spreadsheet.set(f"A{i+1}", str(i + 1))  # 行番号
             spreadsheet.set(f"A{1}", headers[0])
@@ -254,33 +263,35 @@ class Ui_Dialog(object):
         # パーツを列挙して情報を書き込む
         row = 2
         i=1
+        s=0
         for i,obj in enumerate(doc.Objects):
-            if hasattr(obj, "Shape") and obj.Shape.Volume > 0:
+            if hasattr(obj, "mass") and obj.mass > 0:
+                
                 try:
                     spreadsheet.set(f"A{row}", str(row-1))  # No
                     spreadsheet.set(f"B{row}", obj.Label)  
                     spreadsheet.set(f"C{row}", obj.dia)
                     try:
-                        spreadsheet.set(f"D{row}", obj.standard) 
+                        try:
+                            spreadsheet.set(f"D{row}", 'L='+obj.L0+'mm') 
+                        except:
+                            pass    
+                        n=obj.count
+                        print(n)
+                        spreadsheet.set(f"E{row}", str(n))   # count
+                        print(obj.mass)
+                        spreadsheet.set(f"F{row}", str(obj.mass))
+                        spreadsheet.set(f"G{row}", f"{obj.mass*n:.2f}")  # mass
                     except:
                         pass
-                    try:
-                        spreadsheet.set(f"E{row}", obj.L0)   # quantity
-                        spreadsheet.set(f"F{row}", 'mm')
-                    except:   
-                        spreadsheet.set(f"E{row}", '1')   # quantity
-                        spreadsheet.set(f"F{row}", 'piece') 
-                    try:
-                        spreadsheet.set(f"G{row}", f"{obj.mass:.2f}")  # mass
-                    except:
-                        pass
-                    #material = obj.material if "material" in obj.PropertiesList else ""
+                    s=obj.mass*n+s
                     row += 1
                 except:
+                    print('error')
                     pass    
-        
+                spreadsheet.set(f'G{row}',str(s))
         App.ActiveDocument.recompute()
-        Gui.activeDocument().activeView().viewAxometric()
+        #Gui.activeDocument().activeView().viewAxometric()
 
     def setParts(self):
         selection = Gui.Selection.getSelection()
@@ -1016,7 +1027,6 @@ class Ui_Dialog(object):
         type=self.combo_type.currentText()
         key = self.comboBox.currentText()[:2]
         L0=self.spinBoxL.value()
-        
         try:
             self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None, QtGui.QApplication.UnicodeUTF8))
         except:
@@ -1032,24 +1042,28 @@ class Ui_Dialog(object):
                 key_2=a[5:]
         except:
             key_1=a     
-
+        #label=obj.Label
+        #label2=self.label_3.text()
+        #print(label2)
         if type=='Flange_type':
             if key=='00' :#---------------------------------------------------------------
                 sa=F_Data.flngs[key_1]
-                label ='Flange Length Tube'
+                #label ='Flange Length Tube'
+                label=self.comboBox.currentText()[3:]
+                #label=self.label_3.text()
                 try:
                     doc=App.activeDocument() 
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 except:
-                    doc=App.newDocument()   
-                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                    pass
+                #obj.addProperty("App::PropertyEnumeration", "japanese",label)
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.addProperty("App::PropertyString", "L0",label).L0=str(L0)
                 obj.dia=F_Data.strp
                 i=self.comboBox_2.currentIndex()
                 obj.dia=F_Data.strp[i]
             elif key=='01' :#---------------------------------------------------------------
-                label ='Single Flange Length Tube'
+                #label ='Single Flange Length Tube'
                 try:
                     doc=App.activeDocument() 
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
@@ -2573,6 +2587,8 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
             ParamUSDuctile.us_ductile(obj) 
             obj.ViewObject.Proxy=0  
+
+
 
         App.ActiveDocument.recompute() 
 
