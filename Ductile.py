@@ -32,14 +32,14 @@ from Duc_Data import ParamUFDuctile
 from Duc_Data import ParamUSDuctile
 #doc=App.ActiveDocument
 DEBUG = True # set to True to show debug messages
-lang=['English','Jananeese']
+lang=['English','Japanese']
 #JDPA A300
 #Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type','US_type',]
 Duc_type=['Flange_type','K_type',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(330, 500)
+        Dialog.resize(330, 550)
         Dialog.move(1000, 0)
         #種別
         self.label_type = QtGui.QLabel('Type',Dialog)
@@ -89,10 +89,6 @@ class Ui_Dialog(object):
         self.pushButton = QtGui.QPushButton('Create',Dialog)
         self.pushButton.setGeometry(QtCore.QRect(170, 115, 75, 24))
         self.pushButton.setObjectName("pushButton")
-        #mass
-        #self.pushButton_2 = QtGui.QPushButton('mass',Dialog)
-        #self.pushButton_2.setGeometry(QtCore.QRect(250, 115, 50, 24))
-        #self.pushButton_2.setObjectName("pushButton")
 
         #更新
         self.pushButton_update = QtGui.QPushButton('upDate',Dialog)
@@ -105,10 +101,7 @@ class Ui_Dialog(object):
         #胴付き寸法
         self.label_7 = QtGui.QLabel(Dialog)
         self.label_7.setGeometry(QtCore.QRect(20, 195, 170, 12))
-        #self.label_7.setObjectName("label_7")
 
-
-        
         #spreadsheet
         self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
         self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 23))
@@ -120,12 +113,10 @@ class Ui_Dialog(object):
         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
         self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 23))
-        #self.pushButton_m.setObjectName("pushButton")  
 
         #count
         self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
         self.pushButton_ct.setGeometry(QtCore.QRect(20, 215, 100, 23))
-        #self.pushButton_ct.setObjectName("pushButton")  
         self.le_ct = QtGui.QLineEdit(Dialog)
         self.le_ct.setGeometry(QtCore.QRect(120, 215, 50, 20))
         self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
@@ -159,6 +150,7 @@ class Ui_Dialog(object):
 
         self.combo_type.addItems(Duc_type)
         self.comboBox_lan.addItems(lang)
+
         self.combo_type.setCurrentIndex(1)
         self.combo_type.currentIndexChanged[int].connect(self.on_type)
         self.combo_type.setCurrentIndex(0)
@@ -176,12 +168,11 @@ class Ui_Dialog(object):
         self.combo_type.currentIndexChanged[int].connect(self.on_lst2)
         self.combo_type.setCurrentIndex(0)
 
-
-
         self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.fc_create)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.setParts)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton_ct, QtCore.SIGNAL("pressed()"), self.countCulc)
 
@@ -240,33 +231,27 @@ class Ui_Dialog(object):
     
     def massTally(self):#spreadsheet
         doc = App.ActiveDocument
-        try:
-            # 新しいスプレッドシートを作成
-            spreadsheet = doc.getObject("PartList")
-            #spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
-        except:
-            #spreadsheet = doc.getObject("PartList")
-            spreadsheet = doc.addObject("Spreadsheet::Sheet", "PartList")
-        spreadsheet.Label = "Parts List"
+        spreadsheet = doc.getObject("Parts_List") 
+        if spreadsheet is None:
+            spreadsheet = doc.addObject("Spreadsheet::Sheet", "Parts_List")
+            #return  
         # ヘッダー行を記入
         headers = ["No",  "Name", "Dia", "Standard",'Count','Unit[kg]','Mass[kg]']
-        
         for header in enumerate(headers):
             #spreadsheet.set(f"A{i+1}", str(i + 1))  # 行番号
-            spreadsheet.set(f"A{1}", headers[0])
-            spreadsheet.set(f"B{1}", headers[1])
-            spreadsheet.set(f"C{1}", headers[2])
-            spreadsheet.set(f"D{1}", headers[3])
-            spreadsheet.set(f"E{1}", headers[4])
-            spreadsheet.set(f"F{1}", headers[5])
-            spreadsheet.set(f"G{1}", headers[6])
+            spreadsheet.set("A1", headers[0])
+            spreadsheet.set("B1", headers[1])
+            spreadsheet.set("C1", headers[2])
+            spreadsheet.set("D1", headers[3])
+            spreadsheet.set("E1", headers[4])
+            spreadsheet.set("F1", headers[5])
+            spreadsheet.set("G1", headers[6])
         # パーツを列挙して情報を書き込む
         row = 2
         i=1
         s=0
         for i,obj in enumerate(doc.Objects):
-            if hasattr(obj, "mass") and obj.mass > 0:
-                
+            if hasattr(obj, "count") and obj.count > 0:
                 try:
                     spreadsheet.set(f"A{row}", str(row-1))  # No
                     spreadsheet.set(f"B{row}", obj.Label)  
@@ -277,9 +262,9 @@ class Ui_Dialog(object):
                         except:
                             pass    
                         n=obj.count
-                        print(n)
+                        #print(n)
                         spreadsheet.set(f"E{row}", str(n))   # count
-                        print(obj.mass)
+                        #print(obj.mass)
                         spreadsheet.set(f"F{row}", str(obj.mass))
                         spreadsheet.set(f"G{row}", f"{obj.mass*n:.2f}")  # mass
                     except:
@@ -291,26 +276,28 @@ class Ui_Dialog(object):
                     pass    
                 spreadsheet.set(f'G{row}',str(s))
         App.ActiveDocument.recompute()
-        #Gui.activeDocument().activeView().viewAxometric()
 
     def setParts(self):
         selection = Gui.Selection.getSelection()
         for obj in selection:
-            myShape=obj
-            Fittings=myShape.Fittings
-            dia=myShape.dia
+            type=obj.type
+            label=obj.Label
+            print(label)
+            Fittings=obj.Fittings
+            dia=obj.dia
             try:
-                L=myShape.L0
+                L=obj.L0
             except:
-                #myShape=None
                 pass
             try:    
                 self.spinBoxL.setValue(int(L))
             except:
-                pass    
-        self.comboBox_2.setCurrentText(dia)
-        self.comboBox.setCurrentText(Fittings)
-        App.ActiveDocument.recompute() 
+                pass   
+            
+            self.combo_type.setCurrentText(type)
+            self.comboBox_2.setCurrentText(dia)
+            self.comboBox.setCurrentText(Fittings)
+            print(type,Fittings,dia)
         App.ActiveDocument.recompute() 
     def spinMove(self):
         step=self.le_step.text()
@@ -359,22 +346,38 @@ class Ui_Dialog(object):
         for obj in selection:
             myShape=obj
             dia=self.comboBox_2.currentText()
+            Fittings=self.comboBox.currentText()
             try:
                 L0=self.spinBoxL.value()
                 try:
                     myShape.L0=str(L0)
                 except:    
                     myShape.L=str(L0)
-                myShape.dia=str(dia)
+                myShape.dia=dia
                 
             except:
-                myShape.dia=str(dia)
+                myShape.dia=dia
+            label=self.comboBox.currentText()[3:]
+            type=self.combo_type.currentText()
+            try:
+                obj.addProperty("App::PropertyString", "type",label)
+                obj.type=type
+            except:
+                obj.type=type
+                print('error')
+                pass    
+
                 
-                #myShape=None
+            gengo=self.comboBox_lan.currentText()
+            label2=self.label_3.text()
+            label=self.comboBox.currentText()[3:]
+    
+            if gengo=='Japanese':
+                obj.Label=label2
+            else:
+                obj.Label=label 
+
         App.ActiveDocument.recompute() 
-        Gui.runCommand('asm3CmdQuickSolve',0)      
-            
-        
 
     def on_type(self):
         type=self.combo_type.currentText()
@@ -712,7 +715,11 @@ class Ui_Dialog(object):
             elif key=='01' :
                 dia=US_Data.strp
             self.comboBox_2.addItems(dia)  
-            
+
+        selection = Gui.Selection.getSelection()
+        for obj in selection:    
+            self.comboBox_2.setCurrentText(obj.dia)
+
     def on_lst2(self):
         type=self.combo_type.currentText()
         key = self.comboBox.currentText()[:2]
@@ -1042,9 +1049,6 @@ class Ui_Dialog(object):
                 key_2=a[5:]
         except:
             key_1=a     
-        #label=obj.Label
-        #label2=self.label_3.text()
-        #print(label2)
         if type=='Flange_type':
             if key=='00' :#---------------------------------------------------------------
                 sa=F_Data.flngs[key_1]
@@ -1056,7 +1060,7 @@ class Ui_Dialog(object):
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 except:
                     pass
-                #obj.addProperty("App::PropertyEnumeration", "japanese",label)
+                obj.addProperty("App::PropertyString", "type",label).type=type
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.addProperty("App::PropertyString", "L0",label).L0=str(L0)
                 obj.dia=F_Data.strp
@@ -1237,7 +1241,8 @@ class Ui_Dialog(object):
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 except:
                     doc=App.newDocument()   
-                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label)      
+                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label)   
+                obj.addProperty("App::PropertyString", "type",label).type=type       
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=K_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1406,6 +1411,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=NS_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1655,6 +1661,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=GX_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1900,6 +1907,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=NSE_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2064,6 +2072,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=S_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2105,6 +2114,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=T_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2264,6 +2274,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=U_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2403,6 +2414,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=UF_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2559,6 +2571,7 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
+                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=US_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2587,9 +2600,6 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
             ParamUSDuctile.us_ductile(obj) 
             obj.ViewObject.Proxy=0  
-
-
-
         App.ActiveDocument.recompute() 
 
 class main():
