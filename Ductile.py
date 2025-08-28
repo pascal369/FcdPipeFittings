@@ -108,10 +108,11 @@ class Ui_Dialog(object):
 
         #言語
         self.pushButton_la=QtGui.QPushButton('language',Dialog)
-        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 100, 23))
+        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 90, 23))
         self.comboBox_lan = QtGui.QComboBox(Dialog)
         self.comboBox_lan.setGeometry(QtCore.QRect(180, 190, 90, 22))
-        
+        self.comboBox_lan.setEditable(True)
+        self.comboBox_lan.lineEdit().setAlignment(QtCore.Qt.AlignRight)
         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
         self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 23))
