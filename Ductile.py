@@ -107,8 +107,10 @@ class Ui_Dialog(object):
         self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 23))
 
         #言語
+        self.pushButton_la=QtGui.QPushButton('language',Dialog)
+        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 100, 23))
         self.comboBox_lan = QtGui.QComboBox(Dialog)
-        self.comboBox_lan.setGeometry(QtCore.QRect(170, 165, 90, 22))
+        self.comboBox_lan.setGeometry(QtCore.QRect(180, 190, 90, 22))
         
         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
@@ -175,16 +177,44 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton_ct, QtCore.SIGNAL("pressed()"), self.countCulc)
-
         QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
         QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally)
         QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
+        QtCore.QObject.connect(self.pushButton_la, QtCore.SIGNAL("pressed()"), self.language)
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", 'FcdPipeFittings', None))
         
+    def language(self):
+        doc = App.activeDocument()
+        if doc:
+            group_names = []
+            for obj in doc.Objects:
+                print(obj.Label)
+                try:
+                    type=obj.type
+                    self.combo_type.setCurrentText(type)
+                except:
+                    pass
+                try:
+                    fittings=obj.Fittings
+                    dia=obj.dia
+                    self.comboBox.setCurrentText(fittings)
+                    self.comboBox_2.setCurrentText(dia)
+
+                    gengo=self.comboBox_lan.currentText()
+                    label2=self.label_3.text()
+                    label=self.comboBox.currentText()[3:]
+                    
+                    if gengo=='Japanese':
+                       obj.Label=label2
+                    else:
+                       obj.Label=label 
+                    print(gengo,label,label2)  
+                except:
+                    pass     
     def massImput(self):
          # 選択したオブジェクトを取得する
         c00 = Gui.Selection.getSelection()
@@ -262,9 +292,7 @@ class Ui_Dialog(object):
                         except:
                             pass    
                         n=obj.count
-                        #print(n)
                         spreadsheet.set(f"E{row}", str(n))   # count
-                        #print(obj.mass)
                         spreadsheet.set(f"F{row}", str(obj.mass))
                         spreadsheet.set(f"G{row}", f"{obj.mass*n:.2f}")  # mass
                     except:
@@ -287,12 +315,9 @@ class Ui_Dialog(object):
             dia=obj.dia
             try:
                 L=obj.L0
-            except:
-                pass
-            try:    
                 self.spinBoxL.setValue(int(L))
             except:
-                pass   
+                pass
             
             self.combo_type.setCurrentText(type)
             self.comboBox_2.setCurrentText(dia)
@@ -344,38 +369,22 @@ class Ui_Dialog(object):
     def update(self):
         selection = Gui.Selection.getSelection()
         for obj in selection:
-            myShape=obj
+            #myShape=obj
             dia=self.comboBox_2.currentText()
             Fittings=self.comboBox.currentText()
+            type=self.combo_type.currentText()
+            obj.dia=dia
+            obj.Fittings=Fittings
+            obj.type=type
+            label=self.comboBox.currentText()[3:]
             try:
                 L0=self.spinBoxL.value()
                 try:
-                    myShape.L0=str(L0)
+                    obj.L0=str(L0)
                 except:    
-                    myShape.L=str(L0)
-                myShape.dia=dia
-                
+                    obj.L=str(L0)
             except:
-                myShape.dia=dia
-            label=self.comboBox.currentText()[3:]
-            type=self.combo_type.currentText()
-            try:
-                obj.addProperty("App::PropertyString", "type",label)
-                obj.type=type
-            except:
-                obj.type=type
-                print('error')
-                pass    
-
-                
-            gengo=self.comboBox_lan.currentText()
-            label2=self.label_3.text()
-            label=self.comboBox.currentText()[3:]
-    
-            if gengo=='Japanese':
-                obj.Label=label2
-            else:
-                obj.Label=label 
+                pass
 
         App.ActiveDocument.recompute() 
 
@@ -1050,10 +1059,11 @@ class Ui_Dialog(object):
         except:
             key_1=a     
         if type=='Flange_type':
+            label=self.comboBox.currentText()[3:]
             if key=='00' :#---------------------------------------------------------------
                 sa=F_Data.flngs[key_1]
                 #label ='Flange Length Tube'
-                label=self.comboBox.currentText()[3:]
+                #label=self.comboBox.currentText()[3:]
                 #label=self.label_3.text()
                 try:
                     doc=App.activeDocument() 
