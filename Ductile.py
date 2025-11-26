@@ -43,30 +43,32 @@ class Ui_Dialog(object):
         Dialog.move(1000, 0)
         #種別
         self.label_type = QtGui.QLabel('Type',Dialog)
-        self.label_type.setGeometry(QtCore.QRect(20, 10, 61, 16))
-        self.label_type.setObjectName("label")
+        self.label_type.setGeometry(QtCore.QRect(20, 10, 61, 22))
+        self.label_type.setStyleSheet("color: black;")
         self.combo_type = QtGui.QComboBox(Dialog)
-        self.combo_type.setGeometry(QtCore.QRect(90, 10, 205, 22))
+        self.combo_type.setGeometry(QtCore.QRect(90, 5, 205, 22))
         self.combo_type.setObjectName("comboBox")
 
         #異形管
         self.label = QtGui.QLabel('Fittings',Dialog)
-        self.label.setGeometry(QtCore.QRect(20, 30, 61, 16))
-        self.label.setObjectName("label")
+        self.label.setGeometry(QtCore.QRect(20, 30, 61, 22))
+        self.label.setStyleSheet("color: black;")
         self.comboBox = QtGui.QComboBox(Dialog)
         self.comboBox.setGeometry(QtCore.QRect(90, 32, 205, 22))
         self.comboBox.setObjectName("comboBox")
+       
         #呼び径
         self.label_2 = QtGui.QLabel('Dia',Dialog)
-        self.label_2.setGeometry(QtCore.QRect(20, 115, 60, 12))
-        self.label_2.setObjectName("label_2")
+        self.label_2.setGeometry(QtCore.QRect(20, 115, 60, 22))
+        self.label_2.setStyleSheet("color: black;")
         self.comboBox_2 = QtGui.QComboBox(Dialog)
-        self.comboBox_2.setGeometry(QtCore.QRect(90, 115, 75, 22))
+        self.comboBox_2.setGeometry(QtCore.QRect(90, 113, 75, 22))
         self.comboBox_2.setObjectName("comboBox_2")
 
         #切管長
         self.label_5 = QtGui.QLabel('cuttingTubeLength',Dialog)
-        self.label_5.setGeometry(QtCore.QRect(20, 80, 61, 16))
+        self.label_5.setGeometry(QtCore.QRect(20, 80, 61, 22))
+        self.label_5.setStyleSheet("color: black;")
         self.spinBoxL=QtGui.QSpinBox(Dialog)
         self.spinBoxL.setGeometry(90, 80, 60, 32)
         self.spinBoxL.setMinimum(10)  # 最小値
@@ -76,68 +78,73 @@ class Ui_Dialog(object):
         self.spinBoxL.setAlignment(QtCore.Qt.AlignCenter)
         #ステップ
         self.label_step = QtGui.QLabel('Step',Dialog)
-        self.label_step.setGeometry(QtCore.QRect(170, 80, 50, 16))
+        self.label_step.setGeometry(QtCore.QRect(170, 80, 50, 22))
+        self.label_step.setStyleSheet("color: black;")
         self.le_step = QtGui.QLineEdit('10',Dialog)
-        self.le_step.setGeometry(QtCore.QRect(210, 80, 50, 16))
+        self.le_step.setGeometry(QtCore.QRect(210, 80, 50, 22))
         self.le_step.setAlignment(QtCore.Qt.AlignCenter)
 
         #異形管　和文
-        self.label_3 = QtGui.QLabel(Dialog)
-        self.label_3.setGeometry(QtCore.QRect(150, 60, 170, 12))
-        self.label_3.setObjectName("label_3")
+        #self.le_la = QtGui.QLabel(Dialog)
+        #self.le_la.setGeometry(QtCore.QRect(150, 60, 170, 12))
+        #self.le_la.setObjectName("label_3")
+        self.le_la = QtGui.QLineEdit(Dialog)
+        self.le_la.setGeometry(QtCore.QRect(90, 58, 170, 20))
+        self.le_la.setAlignment(QtCore.Qt.AlignLeft)  
         #create
         self.pushButton = QtGui.QPushButton('Create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(170, 115, 75, 24))
+        self.pushButton.setGeometry(QtCore.QRect(20, 140, 75, 22))
         self.pushButton.setObjectName("pushButton")
 
         #更新
         self.pushButton_update = QtGui.QPushButton('upDate',Dialog)
-        self.pushButton_update.setGeometry(QtCore.QRect(90, 140, 75, 22))
+        self.pushButton_update.setGeometry(QtCore.QRect(113, 140, 70, 22))
 
         #インポートデータ
         self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(170, 140, 75, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(205, 140, 75, 22))
         
         #胴付き寸法
         self.label_7 = QtGui.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(20, 195, 170, 12))
-
+        self.label_7.setGeometry(QtCore.QRect(20, 195, 170, 22))
+        self.label_7.setStyleSheet("color: black;")
         #spreadsheet
         self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
-        self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 23))
+        self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 22))
 
         #言語
         self.pushButton_la=QtGui.QPushButton('language',Dialog)
-        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 90, 23))
+        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 90, 22))
         self.comboBox_lan = QtGui.QComboBox(Dialog)
         self.comboBox_lan.setGeometry(QtCore.QRect(180, 190, 90, 22))
         self.comboBox_lan.setEditable(True)
         self.comboBox_lan.lineEdit().setAlignment(QtCore.Qt.AlignRight)
         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
-        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 23))
+        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 22))
 
         #count
         self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
-        self.pushButton_ct.setGeometry(QtCore.QRect(20, 215, 100, 23))
+        self.pushButton_ct.setGeometry(QtCore.QRect(20, 215, 95, 22))
         self.le_ct = QtGui.QLineEdit(Dialog)
-        self.le_ct.setGeometry(QtCore.QRect(120, 215, 50, 20))
+        self.le_ct.setGeometry(QtCore.QRect(120, 215, 50, 22))
         self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_ct.setText('1')
         
         #質量入力
         self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
-        self.pushButton_m3.setGeometry(QtCore.QRect(20, 240, 100, 23))
+        self.pushButton_m3.setGeometry(QtCore.QRect(20, 240, 95, 22))
         self.pushButton_m3.setObjectName("pushButton")  
         self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(120, 240, 50, 20))
+        self.le_mass.setGeometry(QtCore.QRect(120, 240, 50, 22))
         self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_mass.setText('10.0')
         #密度
         self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(20, 265, 80, 12))
+        self.lbl_gr.setGeometry(QtCore.QRect(20, 265, 80, 22))
+        self.lbl_gr.setStyleSheet("color: black;")
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(120, 265, 50, 20))
+        self.le_gr.setGeometry(QtCore.QRect(120, 265, 50, 22))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')
 
@@ -206,7 +213,7 @@ class Ui_Dialog(object):
                     self.comboBox_2.setCurrentText(dia)
 
                     gengo=self.comboBox_lan.currentText()
-                    label2=self.label_3.text()
+                    label2=obj.JPN
                     label=self.comboBox.currentText()[3:]
                     
                     if gengo=='Japanese':
@@ -314,6 +321,7 @@ class Ui_Dialog(object):
             print(label)
             Fittings=obj.Fittings
             dia=obj.dia
+            JPN=obj.JPN
             try:
                 L=obj.L0
                 self.spinBoxL.setValue(int(L))
@@ -323,6 +331,7 @@ class Ui_Dialog(object):
             self.combo_type.setCurrentText(type)
             self.comboBox_2.setCurrentText(dia)
             self.comboBox.setCurrentText(Fittings)
+            self.le_la.setText(JPN)
             print(type,Fittings,dia)
         App.ActiveDocument.recompute() 
     def spinMove(self):
@@ -386,6 +395,14 @@ class Ui_Dialog(object):
                     obj.L=str(L0)
             except:
                 pass
+            try:
+                obj.JPN=self.le_la.text()
+            except:
+                JPN=self.le_la.text()
+                obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN   
+
+                    
+
 
         App.ActiveDocument.recompute() 
 
@@ -947,7 +964,7 @@ class Ui_Dialog(object):
         if type=='Flange_type':
             try:
                 FC=F_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_f' + key + '.png'
             except:
                 pass   
@@ -955,7 +972,7 @@ class Ui_Dialog(object):
         elif type=='K_type':
             try:
                 FC=K_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_k' + key + '.png'  
             except:
                 pass    
@@ -963,7 +980,7 @@ class Ui_Dialog(object):
         elif type=='NS_type':
             try:
                 FC=NS_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_ns' + key + '.png'
             except:
                 pass
@@ -971,7 +988,7 @@ class Ui_Dialog(object):
         elif type=='GX_type':
             try:
                 FC=GX_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_GX' + key + '.png'  
             except:
                 pass
@@ -979,7 +996,7 @@ class Ui_Dialog(object):
         elif type=='NSE_type':
             try:
                 FC=NSE_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_nse' + key + '.png'  
             except:
                 pass
@@ -987,7 +1004,7 @@ class Ui_Dialog(object):
         elif type=='S_type':
             try:
                 FC=S_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_s' + key + '.png'  
             except:
                 pass
@@ -995,7 +1012,7 @@ class Ui_Dialog(object):
         elif type=='T_type':
             try:
                 FC=T_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_t' + key + '.png'    
             except:
                 pass
@@ -1003,7 +1020,7 @@ class Ui_Dialog(object):
         elif type=='U_type':
             try:
                 FC=U_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_u' + key + '.png' 
             except:
                 pass
@@ -1011,7 +1028,7 @@ class Ui_Dialog(object):
         elif type=='UF_type':
             try:
                 FC=UF_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_uf' + key + '.png'  
             except:
                 pass
@@ -1019,7 +1036,7 @@ class Ui_Dialog(object):
         elif type=='US_type':
             try:
                 FC=US_Data.FC_type[key]
-                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_us' + key + '.png'      
             except:
                 pass
@@ -1045,9 +1062,9 @@ class Ui_Dialog(object):
         key = self.comboBox.currentText()[:2]
         L0=self.spinBoxL.value()
         try:
-            self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None, QtGui.QApplication.UnicodeUTF8))
+            self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None, QtGui.QApplication.UnicodeUTF8))
         except:
-            self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
+            self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
 
         a=self.comboBox_2.currentText()
         try:
@@ -1065,7 +1082,7 @@ class Ui_Dialog(object):
                 sa=F_Data.flngs[key_1]
                 #label ='Flange Length Tube'
                 #label=self.comboBox.currentText()[3:]
-                #label=self.label_3.text()
+                #label=self.le_la.text()
                 try:
                     doc=App.activeDocument() 
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
@@ -2599,19 +2616,27 @@ class Ui_Dialog(object):
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=US_Data.strp
                 i=self.comboBox_2.currentIndex()
-                obj.dia=US_Data.strp[i] 
+                obj.dia=US_Data.strp[i]
+                
+        obj.ViewObject.Proxy= 0  
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        
+        Gui.runCommand('Draft_Move',0)    
 
-            try:
-                doc=App.activeDocument() 
-            except:
-                doc=App.newDocument() 
-
-
-            Fittings=self.comboBox.currentText()
-            obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
-            ParamUSDuctile.us_ductile(obj) 
-            obj.ViewObject.Proxy=0  
-        App.ActiveDocument.recompute() 
+        #    try:
+        #        doc=App.activeDocument() 
+        #    except:
+        #        doc=App.newDocument() 
+#
+#
+        #    Fittings=self.comboBox.currentText()
+        #    obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
+        #    ParamUSDuctile.us_ductile(obj) 
+        #    obj.ViewObject.Proxy=0  
+        #    JPN=self.le_la.text()  
+        #    obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN     
+        #.ActiveDocument.recompute() 
 
 class main():
         d = QtGui.QWidget()
