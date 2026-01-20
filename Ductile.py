@@ -32,43 +32,41 @@ from Duc_Data import ParamUFDuctile
 from Duc_Data import ParamUSDuctile
 #doc=App.ActiveDocument
 DEBUG = True # set to True to show debug messages
-lang=['English','Japanese']
-#JDPA A300
-#Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type','US_type',]
-Duc_type=['Flange_type','K_type',]
+
+Duc_type=['Flange_type','K_type','NS_type','GX_type','NSE_type','S_type','T_type','U_type','UF_type']
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(330, 550)
+        Dialog.resize(330, 435)
         Dialog.move(1000, 0)
         #種別
         self.label_type = QtGui.QLabel('Type',Dialog)
-        self.label_type.setGeometry(QtCore.QRect(20, 10, 61, 22))
-        self.label_type.setStyleSheet("color: black;")
+        self.label_type.setGeometry(QtCore.QRect(20, 10, 61, 16))
+        self.label_type.setStyleSheet("color: gray;")
         self.combo_type = QtGui.QComboBox(Dialog)
-        self.combo_type.setGeometry(QtCore.QRect(90, 5, 205, 22))
+        self.combo_type.setGeometry(QtCore.QRect(90, 10, 205, 22))
         self.combo_type.setObjectName("comboBox")
 
         #異形管
         self.label = QtGui.QLabel('Fittings',Dialog)
-        self.label.setGeometry(QtCore.QRect(20, 30, 61, 22))
-        self.label.setStyleSheet("color: black;")
+        self.label.setGeometry(QtCore.QRect(20, 30, 61, 16))
+        self.label.setStyleSheet("color: gray;")
         self.comboBox = QtGui.QComboBox(Dialog)
         self.comboBox.setGeometry(QtCore.QRect(90, 32, 205, 22))
         self.comboBox.setObjectName("comboBox")
-       
         #呼び径
         self.label_2 = QtGui.QLabel('Dia',Dialog)
-        self.label_2.setGeometry(QtCore.QRect(20, 115, 60, 22))
-        self.label_2.setStyleSheet("color: black;")
+        self.label_2.setGeometry(QtCore.QRect(20, 115, 60, 12))
+        self.label_2.setStyleSheet("color: gray;")
         self.comboBox_2 = QtGui.QComboBox(Dialog)
-        self.comboBox_2.setGeometry(QtCore.QRect(90, 113, 75, 22))
+        self.comboBox_2.setGeometry(QtCore.QRect(90, 115, 75, 22))
         self.comboBox_2.setObjectName("comboBox_2")
 
         #切管長
         self.label_5 = QtGui.QLabel('cuttingTubeLength',Dialog)
-        self.label_5.setGeometry(QtCore.QRect(20, 80, 61, 22))
-        self.label_5.setStyleSheet("color: black;")
+        self.label_5.setGeometry(QtCore.QRect(20, 80, 61, 16))
+        self.label_5.setStyleSheet("color: gray;")
         self.spinBoxL=QtGui.QSpinBox(Dialog)
         self.spinBoxL.setGeometry(90, 80, 60, 32)
         self.spinBoxL.setMinimum(10)  # 最小値
@@ -78,89 +76,48 @@ class Ui_Dialog(object):
         self.spinBoxL.setAlignment(QtCore.Qt.AlignCenter)
         #ステップ
         self.label_step = QtGui.QLabel('Step',Dialog)
-        self.label_step.setGeometry(QtCore.QRect(170, 80, 50, 22))
-        self.label_step.setStyleSheet("color: black;")
+        self.label_step.setGeometry(QtCore.QRect(170, 80, 50, 16))
+        self.label_step.setStyleSheet("color: gray;")
         self.le_step = QtGui.QLineEdit('10',Dialog)
-        self.le_step.setGeometry(QtCore.QRect(210, 80, 50, 22))
+        self.le_step.setGeometry(QtCore.QRect(210, 80, 50, 16))
         self.le_step.setAlignment(QtCore.Qt.AlignCenter)
 
         #異形管　和文
-        #self.le_la = QtGui.QLabel(Dialog)
-        #self.le_la.setGeometry(QtCore.QRect(150, 60, 170, 12))
-        #self.le_la.setObjectName("label_3")
-        self.le_la = QtGui.QLineEdit(Dialog)
-        self.le_la.setGeometry(QtCore.QRect(90, 58, 170, 20))
-        self.le_la.setAlignment(QtCore.Qt.AlignLeft)  
+        self.label_3 = QtGui.QLabel(Dialog)
+        self.label_3.setGeometry(QtCore.QRect(150, 60, 170, 12))
+        self.label_3.setStyleSheet("color: gray;")
         #create
         self.pushButton = QtGui.QPushButton('Create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(20, 140, 75, 22))
+        self.pushButton.setGeometry(QtCore.QRect(170, 115, 75, 24))
         self.pushButton.setObjectName("pushButton")
+        #mass
+        #self.pushButton_2 = QtGui.QPushButton('mass',Dialog)
+        #self.pushButton_2.setGeometry(QtCore.QRect(250, 115, 50, 24))
+        #self.pushButton_2.setObjectName("pushButton")
 
         #更新
         self.pushButton_update = QtGui.QPushButton('upDate',Dialog)
-        self.pushButton_update.setGeometry(QtCore.QRect(113, 140, 70, 22))
+        self.pushButton_update.setGeometry(QtCore.QRect(90, 140, 75, 22))
 
         #インポートデータ
         self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(205, 140, 75, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(170, 140, 75, 22))
         
         #胴付き寸法
         self.label_7 = QtGui.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(20, 195, 170, 22))
-        self.label_7.setStyleSheet("color: black;")
-        #spreadsheet
-        self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
-        self.pushButton_m2.setGeometry(QtCore.QRect(20, 165, 150, 22))
-
-        #言語
-        self.pushButton_la=QtGui.QPushButton('language',Dialog)
-        self.pushButton_la.setGeometry(QtCore.QRect(180, 165, 90, 22))
-        self.comboBox_lan = QtGui.QComboBox(Dialog)
-        self.comboBox_lan.setGeometry(QtCore.QRect(180, 190, 90, 22))
-        self.comboBox_lan.setEditable(True)
-        self.comboBox_lan.lineEdit().setAlignment(QtCore.Qt.AlignRight)
-        #質量計算
-        self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
-        self.pushButton_m.setGeometry(QtCore.QRect(20, 190, 150, 22))
-
-        #count
-        self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
-        self.pushButton_ct.setGeometry(QtCore.QRect(20, 215, 95, 22))
-        self.le_ct = QtGui.QLineEdit(Dialog)
-        self.le_ct.setGeometry(QtCore.QRect(120, 215, 50, 22))
-        self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
-        self.le_ct.setText('1')
-        
-        #質量入力
-        self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
-        self.pushButton_m3.setGeometry(QtCore.QRect(20, 240, 95, 22))
-        self.pushButton_m3.setObjectName("pushButton")  
-        self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(120, 240, 50, 22))
-        self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
-        self.le_mass.setText('10.0')
-        #密度
-        self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(20, 265, 80, 22))
-        self.lbl_gr.setStyleSheet("color: black;")
-        self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(120, 265, 50, 22))
-        self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
-        self.le_gr.setText('7.85')
-
+        self.label_7.setGeometry(QtCore.QRect(20, 170, 170, 12))
+        self.label_7.setObjectName("label_7")
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
-        self.label_6.setGeometry(QtCore.QRect(15, 300, 300, 200))
+        self.label_6.setGeometry(QtCore.QRect(15, 210, 300, 200))
         self.label_6.setText("")
         base=os.path.dirname(os.path.abspath(__file__))
         joined_path = os.path.join(base, "img","img_00.png")
         self.label_6.setPixmap(QtGui.QPixmap(joined_path))
-        self.label_6.setAlignment(QtCore.Qt.AlignTop)
+        self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
 
         self.combo_type.addItems(Duc_type)
-        self.comboBox_lan.addItems(lang)
-
         self.combo_type.setCurrentIndex(1)
         self.combo_type.currentIndexChanged[int].connect(self.on_type)
         self.combo_type.setCurrentIndex(0)
@@ -181,158 +138,34 @@ class Ui_Dialog(object):
         self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.fc_create)
+        #QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("pressed()"), self.on_mass)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.setParts)
-        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton_update, QtCore.SIGNAL("pressed()"), self.update)
-        QtCore.QObject.connect(self.pushButton_ct, QtCore.SIGNAL("pressed()"), self.countCulc)
-        QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
-        QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally)
-        QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
-        QtCore.QObject.connect(self.pushButton_la, QtCore.SIGNAL("pressed()"), self.language)
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", 'FcdPipeFittings', None))
         
-    def language(self):
-        doc = App.activeDocument()
-        if doc:
-            group_names = []
-            for obj in doc.Objects:
-                print(obj.Label)
-                try:
-                    type=obj.type
-                    self.combo_type.setCurrentText(type)
-                except:
-                    pass
-                try:
-                    fittings=obj.Fittings
-                    dia=obj.dia
-                    self.comboBox.setCurrentText(fittings)
-                    self.comboBox_2.setCurrentText(dia)
-
-                    gengo=self.comboBox_lan.currentText()
-                    label2=obj.JPN
-                    label=self.comboBox.currentText()[3:]
-                    
-                    if gengo=='Japanese':
-                       obj.Label=label2
-                    else:
-                       obj.Label=label 
-                    print(gengo,label,label2)  
-                except:
-                    pass     
-    def massImput(self):
-         # 選択したオブジェクトを取得する
-        c00 = Gui.Selection.getSelection()
-        if c00:
-            obj = c00[0]
-        label='mass[kg]'
-        g=float(self.le_mass.text())
-        try:
-            obj.addProperty("App::PropertyFloat", "mass",label)
-            obj.mass=g
-        except:
-            obj.mass=g
-
-    def countCulc(self):
-        c00 = Gui.Selection.getSelection()
-        if c00:
-            obj = c00[0]
-        label='mass[kg]'
-        count=int(self.le_ct.text())
-        try:
-            obj.addProperty("App::PropertyFloat", "count",label)
-            obj.count=count
-        except:
-            obj.count=count 
-
-    def massCulc(self):
-        # 選択したオブジェクトを取得する
-        c00 = Gui.Selection.getSelection()
-        if c00:
-            obj = c00[0]
-        label='mass[kg]'
-        g0=float(self.le_gr.text())
-        try:
-            g=round(obj.Shape.Volume*g0*1000/10**9 ,2)
-            count=int(self.le_ct.text())
-            print(count)
-        except:
-             pass
-        try:
-            obj.addProperty("App::PropertyFloat", "mass",label)
-            obj.mass=g
-        except:
-            obj.mass=g  
-    
-    def massTally(self):#spreadsheet
-        doc = App.ActiveDocument
-        spreadsheet = doc.getObject("Parts_List") 
-        if spreadsheet is None:
-            spreadsheet = doc.addObject("Spreadsheet::Sheet", "Parts_List")
-            #return  
-        # ヘッダー行を記入
-        headers = ["No",  "Name", "Dia", "Standard",'Count','Unit[kg]','Mass[kg]']
-        for header in enumerate(headers):
-            #spreadsheet.set(f"A{i+1}", str(i + 1))  # 行番号
-            spreadsheet.set("A1", headers[0])
-            spreadsheet.set("B1", headers[1])
-            spreadsheet.set("C1", headers[2])
-            spreadsheet.set("D1", headers[3])
-            spreadsheet.set("E1", headers[4])
-            spreadsheet.set("F1", headers[5])
-            spreadsheet.set("G1", headers[6])
-        # パーツを列挙して情報を書き込む
-        row = 2
-        i=1
-        s=0
-        for i,obj in enumerate(doc.Objects):
-            if hasattr(obj, "count") and obj.count > 0:
-                try:
-                    spreadsheet.set(f"A{row}", str(row-1))  # No
-                    spreadsheet.set(f"B{row}", obj.Label)  
-                    spreadsheet.set(f"C{row}", obj.dia)
-                    try:
-                        try:
-                            spreadsheet.set(f"D{row}", 'L='+obj.L0+'mm') 
-                        except:
-                            pass    
-                        n=obj.count
-                        spreadsheet.set(f"E{row}", str(n))   # count
-                        spreadsheet.set(f"F{row}", str(obj.mass))
-                        spreadsheet.set(f"G{row}", f"{obj.mass*n:.2f}")  # mass
-                    except:
-                        pass
-                    s=obj.mass*n+s
-                    row += 1
-                except:
-                    print('error')
-                    pass    
-                spreadsheet.set(f'G{row}',str(s))
-        App.ActiveDocument.recompute()
 
     def setParts(self):
         selection = Gui.Selection.getSelection()
         for obj in selection:
-            type=obj.type
-            label=obj.Label
-            print(label)
-            Fittings=obj.Fittings
-            dia=obj.dia
-            JPN=obj.JPN
+            myShape=obj
+            Fittings=myShape.Fittings
+            dia=myShape.dia
             try:
-                L=obj.L0
+                L=myShape.L0
+            except:
+                #myShape=None
+                pass
+            try:    
                 self.spinBoxL.setValue(int(L))
             except:
-                pass
-            
-            self.combo_type.setCurrentText(type)
-            self.comboBox_2.setCurrentText(dia)
-            self.comboBox.setCurrentText(Fittings)
-            self.le_la.setText(JPN)
-            print(type,Fittings,dia)
+                pass    
+        self.comboBox_2.setCurrentText(dia)
+        self.comboBox.setCurrentText(Fittings)
+        App.ActiveDocument.recompute() 
         App.ActiveDocument.recompute() 
     def spinMove(self):
         step=self.le_step.text()
@@ -379,35 +212,29 @@ class Ui_Dialog(object):
     def update(self):
         selection = Gui.Selection.getSelection()
         for obj in selection:
-            #myShape=obj
+            myShape=obj
             dia=self.comboBox_2.currentText()
-            Fittings=self.comboBox.currentText()
-            type=self.combo_type.currentText()
-            obj.dia=dia
-            obj.Fittings=Fittings
-            obj.type=type
-            label=self.comboBox.currentText()[3:]
+            #print(dia)
             try:
                 L0=self.spinBoxL.value()
                 try:
-                    obj.L0=str(L0)
+                    myShape.L0=str(L0)
                 except:    
-                    obj.L=str(L0)
+                    myShape.L=str(L0)
+                myShape.dia=str(dia)
+                
             except:
-                pass
-            try:
-                obj.JPN=self.le_la.text()
-            except:
-                JPN=self.le_la.text()
-                obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN   
-
-                    
-
-
+                myShape.dia=str(dia)
+                
+                #myShape=None
         App.ActiveDocument.recompute() 
+        Gui.runCommand('asm3CmdQuickSolve',0)      
+            
+        
 
     def on_type(self):
         type=self.combo_type.currentText()
+        #print(type)
         key=self.comboBox.currentText()[:2]
         self.comboBox.clear()
         if type=='Flange_type':
@@ -742,11 +569,7 @@ class Ui_Dialog(object):
             elif key=='01' :
                 dia=US_Data.strp
             self.comboBox_2.addItems(dia)  
-
-        selection = Gui.Selection.getSelection()
-        for obj in selection:    
-            self.comboBox_2.setCurrentText(obj.dia)
-
+            
     def on_lst2(self):
         type=self.combo_type.currentText()
         key = self.comboBox.currentText()[:2]
@@ -964,7 +787,7 @@ class Ui_Dialog(object):
         if type=='Flange_type':
             try:
                 FC=F_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_f' + key + '.png'
             except:
                 pass   
@@ -972,7 +795,7 @@ class Ui_Dialog(object):
         elif type=='K_type':
             try:
                 FC=K_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_k' + key + '.png'  
             except:
                 pass    
@@ -980,7 +803,7 @@ class Ui_Dialog(object):
         elif type=='NS_type':
             try:
                 FC=NS_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_ns' + key + '.png'
             except:
                 pass
@@ -988,7 +811,7 @@ class Ui_Dialog(object):
         elif type=='GX_type':
             try:
                 FC=GX_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_GX' + key + '.png'  
             except:
                 pass
@@ -996,7 +819,7 @@ class Ui_Dialog(object):
         elif type=='NSE_type':
             try:
                 FC=NSE_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_nse' + key + '.png'  
             except:
                 pass
@@ -1004,7 +827,7 @@ class Ui_Dialog(object):
         elif type=='S_type':
             try:
                 FC=S_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_s' + key + '.png'  
             except:
                 pass
@@ -1012,7 +835,7 @@ class Ui_Dialog(object):
         elif type=='T_type':
             try:
                 FC=T_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_t' + key + '.png'    
             except:
                 pass
@@ -1020,7 +843,7 @@ class Ui_Dialog(object):
         elif type=='U_type':
             try:
                 FC=U_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_u' + key + '.png' 
             except:
                 pass
@@ -1028,7 +851,7 @@ class Ui_Dialog(object):
         elif type=='UF_type':
             try:
                 FC=UF_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_uf' + key + '.png'  
             except:
                 pass
@@ -1036,7 +859,7 @@ class Ui_Dialog(object):
         elif type=='US_type':
             try:
                 FC=US_Data.FC_type[key]
-                self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+                self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
                 pic='img_us' + key + '.png'      
             except:
                 pass
@@ -1061,10 +884,11 @@ class Ui_Dialog(object):
         type=self.combo_type.currentText()
         key = self.comboBox.currentText()[:2]
         L0=self.spinBoxL.value()
+        
         try:
-            self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None, QtGui.QApplication.UnicodeUTF8))
+            self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None, QtGui.QApplication.UnicodeUTF8))
         except:
-            self.le_la.setText(QtGui.QApplication.translate("Dialog", FC, None))
+            self.label_3.setText(QtGui.QApplication.translate("Dialog", FC, None))
 
         a=self.comboBox_2.currentText()
         try:
@@ -1076,26 +900,24 @@ class Ui_Dialog(object):
                 key_2=a[5:]
         except:
             key_1=a     
+
         if type=='Flange_type':
-            label=self.comboBox.currentText()[3:]
             if key=='00' :#---------------------------------------------------------------
                 sa=F_Data.flngs[key_1]
-                #label ='Flange Length Tube'
-                #label=self.comboBox.currentText()[3:]
-                #label=self.le_la.text()
+                label ='Flange Length Tube'
                 try:
                     doc=App.activeDocument() 
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 except:
-                    pass
-                obj.addProperty("App::PropertyString", "type",label).type=type
+                    doc=App.newDocument()   
+                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.addProperty("App::PropertyString", "L0",label).L0=str(L0)
                 obj.dia=F_Data.strp
                 i=self.comboBox_2.currentIndex()
                 obj.dia=F_Data.strp[i]
             elif key=='01' :#---------------------------------------------------------------
-                #label ='Single Flange Length Tube'
+                label ='Single Flange Length Tube'
                 try:
                     doc=App.activeDocument() 
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
@@ -1269,8 +1091,7 @@ class Ui_Dialog(object):
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
                 except:
                     doc=App.newDocument()   
-                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label)   
-                obj.addProperty("App::PropertyString", "type",label).type=type       
+                    obj = App.ActiveDocument.addObject("Part::FeaturePython",label)      
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=K_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1439,7 +1260,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=NS_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1689,7 +1509,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=GX_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -1935,7 +1754,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=NSE_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2100,7 +1918,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=S_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2142,7 +1959,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=T_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2302,7 +2118,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=U_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2442,7 +2257,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=UF_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2599,7 +2413,6 @@ class Ui_Dialog(object):
                 except:
                     doc=App.newDocument()   
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label) 
-                obj.addProperty("App::PropertyString", "type",label).type=type    
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=US_Data.strp
                 i=self.comboBox_2.currentIndex()
@@ -2616,27 +2429,23 @@ class Ui_Dialog(object):
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 obj.dia=US_Data.strp
                 i=self.comboBox_2.currentIndex()
-                obj.dia=US_Data.strp[i]
-                
+                obj.dia=US_Data.strp[i] 
+
+            try:
+                doc=App.activeDocument() 
+            except:
+                doc=App.newDocument() 
+
+
+            Fittings=self.comboBox.currentText()
+            obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
+            ParamUSDuctile.us_ductile(obj) 
+            obj.ViewObject.Proxy=0  
+
         obj.ViewObject.Proxy= 0  
         Gui.activateWorkbench("DraftWorkbench")
         Gui.Selection.addSelection(obj)
-        
-        Gui.runCommand('Draft_Move',0)    
-
-        #    try:
-        #        doc=App.activeDocument() 
-        #    except:
-        #        doc=App.newDocument() 
-#
-#
-        #    Fittings=self.comboBox.currentText()
-        #    obj.addProperty("App::PropertyString", "Fittings",label).Fittings=Fittings
-        #    ParamUSDuctile.us_ductile(obj) 
-        #    obj.ViewObject.Proxy=0  
-        #    JPN=self.le_la.text()  
-        #    obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN     
-        #.ActiveDocument.recompute() 
+        Gui.runCommand('Draft_Move',0) 
 
 class main():
         d = QtGui.QWidget()
